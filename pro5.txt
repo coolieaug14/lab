@@ -1,66 +1,67 @@
 <!DOCTYPE html>
 <html>
 <body>
-<h1><marquee>PHP PROGRAM FOR REQUIRED FIELD VALIDATOR</marquee></h1>
+<h1><center>LIBRARY STUDENT DETAILS USING PHP VALIDATOR</center></h1>
 
 <?php
-$name = $email = $password = "";
-$nameErr = $emailErr = $passwordErr = "";
+$nameErr = $emailErr = $genderErr = $rollnoErr = $bookErr = $classErr = $passwordErr = $deptErr = "";
+$name = $email = $gender = $book = $rollno = $class = $dept = $password = "";
 
 function test_input($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
+    return htmlspecialchars(stripslashes(trim($data)));
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Name validation
-    if (empty($_POST["name"])) {
-        $nameErr = "Name is required";
-    } elseif (!preg_match("/^[a-zA-Z]*$/", $_POST["name"])) {
-        $nameErr = "Only letters allowed";
-    } else {
-        $name = test_input($_POST["name"]);
-    }
+    if (empty($_POST["name"]) || !preg_match("/^[a-zA-Z ]*$/", $_POST["name"])) 
+        $nameErr = "Valid name required";
+    else $name = test_input($_POST["name"]);
 
-    // Email validation
-    if (empty($_POST["email"])) {
-        $emailErr = "Email is required";
-    } elseif (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
-        $emailErr = "Invalid email format";
-    } else {
-        $email = test_input($_POST["email"]);
-    }
+    if (empty($_POST["email"]) || !filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) 
+        $emailErr = "Valid email required";
+    else $email = test_input($_POST["email"]);
 
-    // Password validation
-    if (empty($_POST["password"])) {
-        $passwordErr = "Password is required";
-    } elseif (!preg_match("/^(?=.*[!@#$%^&_])(?=.*[0-9])(?=.*[A-Z]).{7,}$/", $_POST["password"])) {
-        $passwordErr = "Password must have 1 uppercase, 1 number, 1 special char, min 7 chars";
-    } else {
-        $password = test_input($_POST["password"]);
-    }
+    if (empty($_POST["rollno"])) $rollnoErr = "Roll no required";
+    else $rollno = test_input($_POST["rollno"]);
+
+    if (empty($_POST["class"])) $classErr = "Class required";
+    else $class = test_input($_POST["class"]);
+
+    if (empty($_POST["dept"])) $deptErr = "Department required";
+    else $dept = test_input($_POST["dept"]);
+
+    if (empty($_POST["gender"])) $genderErr = "Gender required";
+    else $gender = test_input($_POST["gender"]);
+
+    if (empty($_POST["password"]) || 
+        !preg_match("/^(?=.*[!@#$%^&_])(?=.*[0-9])(?=.*[A-Z]).{7,}$/", $_POST["password"])) 
+        $passwordErr = "Password must have 1 uppercase, number & special char";
+    else $password = test_input($_POST["password"]);
+
+    if (empty($_POST["book"])) $bookErr = "Book name required";
+    else $book = test_input($_POST["book"]);
 }
 ?>
 
-<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
-    NAME: <input type="text" name="name" value="<?php echo $name; ?>">
-    <span style="color:red">*<?php echo $nameErr; ?></span><br><br>
+<form method="post">
+Name: <input type="text" name="name"> <span style="color:red;">*<?php echo $nameErr; ?></span><br><br>
+Email: <input type="text" name="email"> <span style="color:red;">*<?php echo $emailErr; ?></span><br><br>
+Roll No: <input type="text" name="rollno"> <span style="color:red;">*<?php echo $rollnoErr; ?></span><br><br>
+Class: <input type="text" name="class"> <span style="color:red;">*<?php echo $classErr; ?></span><br><br>
+Department: <input type="text" name="dept"> <span style="color:red;">*<?php echo $deptErr; ?></span><br><br>
+Book Received: <input type="text" name="book"> <span style="color:red;">*<?php echo $bookErr; ?></span><br><br>
+Password: <input type="password" name="password"> <span style="color:red;">*<?php echo $passwordErr; ?></span><br><br>
+Gender:
+<input type="radio" name="gender" value="Female">Female
+<input type="radio" name="gender" value="Male">Male
+<span style="color:red;">*<?php echo $genderErr; ?></span><br><br>
 
-    EMAIL: <input type="text" name="email" value="<?php echo $email; ?>">
-    <span style="color:red">*<?php echo $emailErr; ?></span><br><br>
-
-    PASSWORD: <input type="password" name="password">
-    <span style="color:red">*<?php echo $passwordErr; ?></span><br><br>
-
-    <input type="submit" value="Submit">
+<input type="submit" value="Submit">
 </form>
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST" && !$nameErr && !$emailErr && !$passwordErr) {
-    echo "<h3>Form Submitted Successfully!</h3>";
-    echo "Name: $name<br>Email: $email<br>Password: $password";
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !$nameErr && !$emailErr && !$rollnoErr && !$classErr && !$deptErr && !$genderErr && !$passwordErr && !$bookErr) {
+    echo "<h2>Student Details:</h2>";
+    echo "Name: $name<br>Email: $email<br>Roll No: $rollno<br>Class: $class<br>Department: $dept<br>Book: $book<br>Gender: $gender";
 }
 ?>
 </body>
