@@ -4,8 +4,8 @@
 <h1><center>LIBRARY STUDENT DETAILS USING PHP VALIDATOR</center></h1>
 
 <?php
-$nameErr = $emailErr = $genderErr = $rollnoErr = $bookErr = $classErr = $passwordErr = $deptErr = "";
-$name = $email = $gender = $book = $rollno = $class = $dept = $password = "";
+$nameErr = $emailErr = $genderErr = $rollnoErr  = $passwordErr = $deptErr = "";
+$name = $email = $gender  = $rollno = $dept = $password = "";
 
 function test_input($data) {
     return htmlspecialchars(stripslashes(trim($data)));
@@ -23,9 +23,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($_POST["rollno"])) $rollnoErr = "Roll no required";
     else $rollno = test_input($_POST["rollno"]);
 
-    if (empty($_POST["class"])) $classErr = "Class required";
-    else $class = test_input($_POST["class"]);
-
     if (empty($_POST["dept"])) $deptErr = "Department required";
     else $dept = test_input($_POST["dept"]);
 
@@ -33,22 +30,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     else $gender = test_input($_POST["gender"]);
 
     if (empty($_POST["password"]) || 
-        !preg_match("/^(?=.*[!@#$%^&_])(?=.*[0-9])(?=.*[A-Z]).{7,}$/", $_POST["password"])) 
+        !preg_match("/^(?=.*[!@#$%^&_])(?=.*[0-9])(?=.*[A-Z]).{7,}$/", $_POST["password"]))
         $passwordErr = "Password must have 1 uppercase, number & special char";
     else $password = test_input($_POST["password"]);
 
-    if (empty($_POST["book"])) $bookErr = "Book name required";
-    else $book = test_input($_POST["book"]);
-}
+    }
 ?>
 
 <form method="post">
 Name: <input type="text" name="name"> <span style="color:red;">*<?php echo $nameErr; ?></span><br><br>
 Email: <input type="text" name="email"> <span style="color:red;">*<?php echo $emailErr; ?></span><br><br>
 Roll No: <input type="text" name="rollno"> <span style="color:red;">*<?php echo $rollnoErr; ?></span><br><br>
-Class: <input type="text" name="class"> <span style="color:red;">*<?php echo $classErr; ?></span><br><br>
 Department: <input type="text" name="dept"> <span style="color:red;">*<?php echo $deptErr; ?></span><br><br>
-Book Received: <input type="text" name="book"> <span style="color:red;">*<?php echo $bookErr; ?></span><br><br>
 Password: <input type="password" name="password"> <span style="color:red;">*<?php echo $passwordErr; ?></span><br><br>
 Gender:
 <input type="radio" name="gender" value="Female">Female
@@ -59,9 +52,9 @@ Gender:
 </form>
 
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST" && !$nameErr && !$emailErr && !$rollnoErr && !$classErr && !$deptErr && !$genderErr && !$passwordErr && !$bookErr) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !$nameErr && !$emailErr && !$rollnoErr && !$deptErr && !$genderErr && !$passwordErr) {
     echo "<h2>Student Details:</h2>";
-    echo "Name: $name<br>Email: $email<br>Roll No: $rollno<br>Class: $class<br>Department: $dept<br>Book: $book<br>Gender: $gender";
+    echo "Name: $name<br>Email: $email<br>Roll No: $rollno<br>Department: $dept<br>Gender: $gender";
 }
 ?>
 </body>
