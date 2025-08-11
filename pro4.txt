@@ -1,43 +1,66 @@
 <!DOCTYPE html>
 <html>
 <body>
-<center><b><h1>String Handling and Reversing</h1></b></center>
+<h1><marquee>PHP PROGRAM FOR REQUIRED FIELD VALIDATOR</marquee></h1>
 
-<form action="pro4.php" method="get">
-    Enter your string: <input type="text" name="CHOICE"/><br><br>
-    <input type="submit" value="Submit"/><br>
+<?php
+$name = $email = $password = "";
+$nameErr = $emailErr = $passwordErr = "";
+
+function test_input($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Name validation
+    if (empty($_POST["name"])) {
+        $nameErr = "Name is required";
+    } elseif (!preg_match("/^[a-zA-Z]*$/", $_POST["name"])) {
+        $nameErr = "Only letters allowed";
+    } else {
+        $name = test_input($_POST["name"]);
+    }
+
+    // Email validation
+    if (empty($_POST["email"])) {
+        $emailErr = "Email is required";
+    } elseif (!filter_var($_POST["email"], FILTER_VALIDATE_EMAIL)) {
+        $emailErr = "Invalid email format";
+    } else {
+        $email = test_input($_POST["email"]);
+    }
+
+    // Password validation
+    if (empty($_POST["password"])) {
+        $passwordErr = "Password is required";
+    } elseif (!preg_match("/^(?=.*[!@#$%^&_])(?=.*[0-9])(?=.*[A-Z]).{7,}$/", $_POST["password"])) {
+        $passwordErr = "Password must have 1 uppercase, 1 number, 1 special char, min 7 chars";
+    } else {
+        $password = test_input($_POST["password"]);
+    }
+}
+?>
+
+<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">
+    NAME: <input type="text" name="name" value="<?php echo $name; ?>">
+    <span style="color:red">*<?php echo $nameErr; ?></span><br><br>
+
+    EMAIL: <input type="text" name="email" value="<?php echo $email; ?>">
+    <span style="color:red">*<?php echo $emailErr; ?></span><br><br>
+
+    PASSWORD: <input type="password" name="password">
+    <span style="color:red">*<?php echo $passwordErr; ?></span><br><br>
+
+    <input type="submit" value="Submit">
 </form>
 
 <?php
-if (isset($_GET["CHOICE"]) && $_GET["CHOICE"] !== "") {
-    $n = $_GET["CHOICE"];
-
-    function analyzeString($n) {
-        $upper = 0;
-        $lower = 0;
-        $number = 0;
-        $special = 0;
-
-        for ($i = 0; $i < strlen($n); $i++) {
-            if (ctype_upper($n[$i])) {
-                $upper++;
-            } elseif (ctype_lower($n[$i])) {
-                $lower++;
-            } elseif (ctype_digit($n[$i])) {
-                $number++;
-            } else {
-                $special++;
-            }
-        }
-
-        echo "Uppercase letters: " . $upper . "<br>";
-        echo "Lowercase letters: " . $lower . "<br>";
-        echo "Numbers: " . $number . "<br>";
-        echo "Special characters: " . $special . "<br>";
-        echo "Reversed string: " . strrev($n) . "<br>";
-    }
-
-    analyzeString($n);
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !$nameErr && !$emailErr && !$passwordErr) {
+    echo "<h3>Form Submitted Successfully!</h3>";
+    echo "Name: $name<br>Email: $email<br>Password: $password";
 }
 ?>
 </body>
